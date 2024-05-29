@@ -35,3 +35,9 @@ LAYERS = {  # for displaying layered view
     'overlay': 4,
     'cursor': 5
 }
+
+RECIPIES = {
+    'smelter': {
+        'iron bar': ['iron'],
+        'copper bar': ['copper']}
+}

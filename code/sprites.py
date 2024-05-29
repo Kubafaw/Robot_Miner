@@ -34,6 +34,7 @@ class OreRock(Generic):
                 player.inventory[self.ore] += 1
             else:
                 player.inventory[self.ore] = 1
+                player.used_inventory_slots += 1
             if self.frame_index >= len(self.sprites):
                 self.area.nodes -= 1
                 self.area.area[self.coordinates[0]][self.coordinates[1]] = '0'

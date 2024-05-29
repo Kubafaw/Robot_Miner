@@ -4,6 +4,8 @@ from player import Player
 from map_generation import Core
 from overlay import Overlay
 from sprites import OreRock
+from buildings import BuildingCreator
+from market import Market
 
 
 class Level:
@@ -16,6 +18,7 @@ class Level:
         self.mineable = pygame.sprite.Group()
         self.collision_sprites = pygame.sprite.Group()
         self.areas = pygame.sprite.Group()
+        self.buildings = pygame.sprite.Group()
 
         self.setup()
 
@@ -24,10 +27,17 @@ class Level:
             pos=(ZONE_WIDTH * MAP_WIDTH / 2, ZONE_HEIGHT * MAP_HEIGHT / 2),
             group=self.all_sprites,
             mineable=self.mineable,
-            collision_sprites=self.collision_sprites)
+            collision_sprites=self.collision_sprites,
+            buildings=self.buildings)
+
+        # market
+        self.market = Market()
+
+        # building creator
+        self.building_creator = BuildingCreator(self.player, (self.all_sprites, self.buildings), self.market)
 
         # overlay
-        self.overlay = Overlay(self.player)
+        self.overlay = Overlay(self.player, self.market)
 
         # map generation
         self.core = Core(['iron', 'copper', 'coal'], [20, 20, 20],
@@ -37,6 +47,7 @@ class Level:
         self.display_surface.fill('black')
         self.all_sprites.custom_draw(self.player)
         self.all_sprites.update(dt)
+        self.market.check_if_fullified()
 
         self.overlay.display(dt)
 

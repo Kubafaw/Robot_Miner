@@ -5,13 +5,14 @@ from timer import Timer
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, group, mineable, collision_sprites):
+    def __init__(self, pos, group, mineable, collision_sprites, buildings):
         super().__init__(group)
 
         self.import_assets()
         self.status = 'right'
         self.frame_index = 0
         self.mineable = mineable
+        self.buildings = buildings
 
         # general setup
         self.image = self.animations[self.status][self.frame_index]
@@ -28,19 +29,25 @@ class Player(pygame.sprite.Sprite):
         self.collision_sprites = collision_sprites
 
         # tools
-        self.tools = ['drill']
+        self.tools = ['drill', 'arm']
         self.using_tool = False
         self.selected_tool = 'drill'
+        self.tool_index = 0
+        self.selected_resource = ''
 
         # timers
         self.timers = {
-            'tool_use': Timer(300)
+            'tool_use': Timer(300),
+            'tool_change': Timer(300),
+            'inventory_change': Timer(200),
+            'resource_input': Timer(100)
         }
 
         # inventory
         self.inventory_slots = 8
         self.used_inventory_slots = 0
         self.inventory = {}
+        self.selected_inventory_slot = 0
 
     def import_assets(self):
         self.animations = {'left': [], 'right': [], 'left_idle': [], 'right_idle': []}
@@ -85,11 +92,47 @@ class Player(pygame.sprite.Sprite):
         elif self.direction.y != 0:
             self.status = 'right'
 
+        # change tool
+        if not self.timers['tool_change'].active:
+            self.timers['tool_change'].activate()
+            if keys[pygame.K_q]:
+                self.tool_index -= 1
+            if keys[pygame.K_e]:
+                self.tool_index += 1
+
+            if self.tool_index >= len(self.tools):
+                self.tool_index = 0
+            if self.tool_index < 0:
+                self.tool_index = len(self.tools) - 1
+
+            self.selected_tool = self.tools[self.tool_index]
+
         # tool usage
         if pygame.mouse.get_pressed()[0]:
             self.using_tool = True
         else:
             self.using_tool = False
+
+        # cycle through inventory
+        if not self.timers['inventory_change'].active:
+            self.timers['inventory_change'].activate()
+            if keys[pygame.K_k]:
+                self.selected_inventory_slot -= 1
+            elif keys[pygame.K_l]:
+                self.selected_inventory_slot += 1
+
+            if self.selected_inventory_slot >= self.inventory_slots:
+                self.selected_inventory_slot = 0
+            if self.selected_inventory_slot < 0:
+                self.selected_inventory_slot = self.inventory_slots - 1
+
+            k = 0
+            self.selected_resource = ''
+            for key in self.inventory.keys():
+                if k == self.selected_inventory_slot:
+                    self.selected_resource = key
+                k += 1
+            print(self.selected_resource)
 
     def update_timers(self):
         for timer in self.timers.values():
@@ -129,5 +172,3 @@ class Player(pygame.sprite.Sprite):
 
         # debug
         # print(self.inventory)
-
-

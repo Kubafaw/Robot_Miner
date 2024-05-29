@@ -31,6 +31,9 @@ class Core(pygame.sprite.Sprite):
             self.areas += [[]]
             for j in range(MAP_HEIGHT):
                 self.areas[i] += ['0']
+        self.areas[int(MAP_WIDTH/2)][int(MAP_HEIGHT/2)] = 'empty'
+        self.areas_created += [Area((int(MAP_WIDTH/2) * ZONE_WIDTH, int(MAP_HEIGHT/2) * ZONE_HEIGHT), self.groups, 'none',
+                                    'none', 'empty')]
         k = 0
         for amount in self.amounts:
             for _ in range(amount):
