@@ -15,6 +15,10 @@ class Overlay:
         # cursor
         self.cursor_frame_index = 0
 
+        # inventory
+        self.inventory = {'slot': '', 'iron': '', 'copper': '', 'coal': ''}
+        self.setup_inventory()
+
     def import_assets(self):
         self.animations = {}
         for tool in self.player.tools:
@@ -37,6 +41,7 @@ class Overlay:
     def display(self, dt):
         self.animate(dt)
         self.tool_usage()
+        self.draw_inventory()
 
     def tool_usage(self):
         if self.player.using_tool:
@@ -57,3 +62,26 @@ class Overlay:
                 if rock.hitbox_rect.colliderect(mining_rect):
                     rock.damage(self.player)
 
+    def setup_inventory(self):
+        for picture in self.inventory.keys():
+            full_path = '../graphics/overlay/inventory/' + picture
+            self.inventory[picture] = pygame.image.load(f'{full_path}.png')
+
+    def draw_inventory(self):
+        k = 0
+        for i in range(8):
+            inventory_surf = self.inventory['slot']
+            inventory_rect = inventory_surf.get_rect(center=(525 + k * 128, SCREEN_HEIGHT - 200))
+            self.display_surface.blit(inventory_surf, inventory_rect)
+            k += 1
+
+        my_font = pygame.font.SysFont('Comic Sans MS', 30)
+        k = 0
+        for item in self.player.inventory.keys():
+            inventory_surf = self.inventory[item]
+            inventory_rect = inventory_surf.get_rect(center=(525 + k * 128, SCREEN_HEIGHT - 200))
+            self.display_surface.blit(inventory_surf, inventory_rect)
+            text_surf = my_font.render(str(self.player.inventory[item]), False, (0, 0, 0))
+            text_rect = text_surf.get_rect(center=(525 + k * 128, SCREEN_HEIGHT - 130))
+            self.display_surface.blit(text_surf, text_rect)
+            k += 1

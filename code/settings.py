@@ -8,10 +8,10 @@ ORES = [
 ]
 
 # zone
-ZONE_WIDTH = 480
-ZONE_HEIGHT = 480
+ZONE_WIDTH = 480  # pix
+ZONE_HEIGHT = 480  # pix
 NODES_PER_ZONE = 8
-RESOURCE_REGENERATION = 10000
+RESOURCE_REGENERATION = 10000  # ms
 
 # areas backgrounds
 AREAS_BACKGROUND = {
@@ -25,14 +25,10 @@ MAP_WIDTH = 10  # in zones
 MAP_HEIGHT = 10  # in zones
 
 # screen
-SCREEN_WIDTH = 1920
-SCREEN_HEIGHT = 1080
+SCREEN_WIDTH = 1920  # pix
+SCREEN_HEIGHT = 1080  # pix
 
-# overlay positions
-OVERLAY_POSITIONS = {
-}
-
-LAYERS = {
+LAYERS = {  # for displaying layered view
     'landscape': 1,
     'main': 2,
     'player': 3,

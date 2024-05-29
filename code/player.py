@@ -126,6 +126,8 @@ class Player(pygame.sprite.Sprite):
         self.update_timers()
         self.move(dt)
         self.animate(dt)
-        print(self.inventory)
+
+        # debug
+        # print(self.inventory)
 
 
